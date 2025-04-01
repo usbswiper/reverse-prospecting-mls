@@ -11,7 +11,7 @@ function getEmailBody($emailData)
     }
     $htmlEmail = '<table width="100%s" border="0" cellpadding="0" cellspacing="0" style="font-size: 15px;line-height: 18px;">
 <tr><td>%s
-<div style="color:darkred;font-weight: bold">NOTE: If you received more than one of these emails it is because you have more than one search setup that matches my listing.</div><br><br>
+<div style="color:darkred;font-weight: bold">NOTE: You are receiving this because you have one or more searches set up that match my listing.</div><br><br>
 %s<br>
 <br>
 Hi %s,<br>
@@ -42,7 +42,7 @@ Cordially,<br><br>
 </td></tr>
 <tr><td>
 <strong>Richard “RJ” Freedkin, Realtor</strong><br>
-RENE, SRS, ABR<br>
+CRS, RENE, SRS, ABR, LHC<br>
 eXp Realty, LLC<br>
 10 N. Martingale Rd Suite 400<br>
 Schaumburg, IL 60173<br>
