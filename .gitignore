@@ -1,0 +1,48 @@
+# PhpStorm IDE files
+.idea/
+*.iml
+*.iws
+*.ipr
+.phpstorm.meta.php
+
+# Composer dependencies
+/vendor/
+composer.phar
+
+# Environment files
+.env
+.env.local
+.env.*.local
+mls_config.php
+
+# Cache & logs
+/var/cache/
+/var/log/
+/logs/
+*.log
+/uploaded/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Build files
+/build/
+/dist/
+
+# User uploaded content (if applicable)
+/public/uploads/
+/uploads/
+
+# PHP-CS-Fixer
+.php_cs.cache
+.php-cs-fixer.cache
+
+# PHPUnit
+.phpunit.result.cache
+/phpunit.xml
+
+# Node modules (if using frontend tools)
+/node_modules/
+npm-debug.log
+yarn-error.log
