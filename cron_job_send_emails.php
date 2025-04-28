@@ -123,7 +123,7 @@ Last scheduled email batch #%s has been processed successfully.<br><br>
 Regards,<br>
 Webmaster Admin<br>
 </body></html>', $allResult['id'], $emailData['emailSubject'], $emailData['address'], $emailData['mls'], $allResult['total_emails'], $allSuccessful, $failedSummary);
-                
+
                 $this->wpdb->update(SCHEDULED_EMAILS_TABLE, ['sent_emails' => $allSuccessful, 'failed_emails' => $totalFailedEmails,
                     'report_sent' => 1], ['id' => $allResult['id']]);
                 $this->sendEmail(ADMIN_REPORT_EMAILS, 'Email Report Summary: #' . $allResult['id'], $htmlEmail);
