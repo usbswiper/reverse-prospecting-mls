@@ -267,7 +267,12 @@ Webmaster Admin<br>
 
 }
 date_default_timezone_set('America/Chicago');
-//ini_set('display_errors', 1);
-//ini_set('display_startup_errors', 1);
-//error_reporting(E_ALL);
+
+// Remove all errors
+error_reporting(0);
+ini_set('display_errors', '0');
+
+// Stop browser caching
+Cron_Job_Send_Emails::noCache();
+
 (new Cron_Job_Send_Emails())->sendEmails();

@@ -161,6 +161,7 @@ class ScheduleEmails extends ApiBase {
     }
 }
 ScheduleEmails::cors();
+ScheduleEmails::noCache();
 try {
     $response = (new ScheduleEmails())->processRequest();
     ScheduleEmails::sendSuccessResponse($response);
