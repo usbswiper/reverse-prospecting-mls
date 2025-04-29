@@ -88,6 +88,14 @@ class ScheduleEmails extends ApiBase {
         $emailData = $firstEmailRow;
         $emailData['custom_subject_prefix'] = $this->requestData['subject_prefix'] ?? '';
         $emailData['custom_email_notes_1'] = $this->requestData['email_notes_1'] ?? '';
+        if (!empty($this->requestData['custom_mls_number'])) {
+            $emailData['mls'] = $this->requestData['custom_mls_number'] ?? '';
+            $emailData['emailSubject'] = preg_replace('/MLS No:\s*\w+/', 'MLS No: ' . $emailData['mls'], $emailData['emailSubject']);
+        }
+        $emailData['custom_website_link'] = $this->requestData['website_link'] ?? '';
+        if (!empty($emailData['custom_website_link'])) {
+            $emailData['custom_website_link'] = 'See all Pictures, Videos, 3D Tour Here --> <a target="_blank" href="'.$emailData['custom_website_link'].'">' . $emailData['custom_website_link'] .'</a><br><br>';
+        }
         $emailData['custom_city'] = $this->requestData["city"];
         $emailData['custom_bedrooms'] = $this->requestData["bedrooms"];
         $emailData['custom_bathrooms'] = $this->requestData["bathrooms"];
@@ -120,7 +128,9 @@ class ScheduleEmails extends ApiBase {
             'listed_at' => $this->requestData['listedAt'],
             'city' => $this->requestData['city'],
             'subject_prefix' => $this->requestData['subject_prefix'] ?? null,
-            'email_notes_1' => $this->requestData['email_notes_1'] ?? null
+            'email_notes_1' => $this->requestData['email_notes_1'] ?? null,
+            'custom_mls_number' => $this->requestData['custom_mls_number'] ?? null,
+            'website_link'  => $this->requestData['website_link']
         ]);
         if (!$scheduledBatch) {
             throw new Exception('An error occurred in scheduling the emails. ' . $this->wpdb->last_error);
