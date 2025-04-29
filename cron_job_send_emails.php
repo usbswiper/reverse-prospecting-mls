@@ -148,7 +148,7 @@ Webmaster Admin<br>
          * Send the unprocessed emails in list or try failed emails once more
          */
         $emailSent = null;
-        $allResults = $this->wpdb->get_results("select a.*, b.image_file, b.bedrooms, b.bathrooms, b.sqft, b.listed_at, b.city, b.subject_prefix, b.email_notes_1   from "
+        $allResults = $this->wpdb->get_results("select a.*, b.image_file, b.bedrooms, b.bathrooms, b.sqft, b.listed_at, b.city, b.subject_prefix, b.email_notes_1, b.website_link, b.custom_mls_number   from "
             . SCHEDULED_EMAILS_LIST_TABLE . " a inner join " . SCHEDULED_EMAILS_TABLE . " b"
             . " on a.batch_id = b.id"
             ." where a.is_processed in (0, 2) and a.total_send_retries <= 1 limit $limit", ARRAY_A);
@@ -156,6 +156,15 @@ Webmaster Admin<br>
             $emailData = json_decode($result['email_data'], true);
             $emailData['custom_subject_prefix'] = $result['subject_prefix'] ?? '';
             $emailData['custom_email_notes_1'] = $result['email_notes_1'] ?? '';
+            if (!empty($result['custom_mls_number'])) {
+                $emailData['mls'] = $result['custom_mls_number'] ?? '';
+                $emailData['emailSubject'] = preg_replace('/MLS No:\s*\w+/', 'MLS No: ' . $emailData['mls'], $emailData['emailSubject']);
+            }
+            $emailData['custom_website_link'] = $result['website_link'] ?? '';
+            if (!empty($emailData['custom_website_link'])) {
+                $emailData['custom_website_link'] = 'See all Pictures, Videos, 3D Tour Here --> <a target="_blank" href="'.$emailData['custom_website_link'].'">' . $emailData['custom_website_link'] .'</a><br><br>';
+            }
+
             $emailData['custom_city'] = $result["city"];
             $emailData['custom_bedrooms'] = $result["bedrooms"];
             $emailData['custom_bathrooms'] = $result["bathrooms"];

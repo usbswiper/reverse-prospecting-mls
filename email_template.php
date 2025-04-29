@@ -21,7 +21,7 @@ According to MRED reverse prospecting, you have a search setup for a client who 
 My listing matches the number of bedrooms, baths, location and price point your clients are looking for as specified in your search criteria.<br>
 <br>
 Number of Bedrooms 		- %s<br><br>
-Number of Bathrooms 	- %s<br><br>
+Number of Bathrooms 	- %s<br><br>%s
 Approximate Sq. Ft. 	- %s<br><br>
 Listed at               - %s<br><br>%s
 I hope you will let your client know about this home in case they want to schedule a showing.<br>
@@ -62,7 +62,7 @@ Schaumburg, IL 60173<br>
     $agentFirstName = explode(' ', $emailData['agentName']);
     return sprintf($htmlEmail, '%', $boldLineNotes, date('M d, Y'),
         $agentFirstName[0], $emailData['address'], $emailData['custom_city'], $emailData['mls'],
-        $emailData['custom_bedrooms'], $emailData['custom_bathrooms'], $emailData['custom_sqft'], $emailData['custom_listed_at'],
+        $emailData['custom_bedrooms'], $emailData['custom_bathrooms'], $emailData['custom_website_link'], $emailData['custom_sqft'], $emailData['custom_listed_at'],
         $imageFile, $emailData['address'], $emailData['custom_city'], $emailData['mls'], $emailData['clientPublicId'],
         IMAGE_BASE_URL.'/richard-image.png',
         IMAGE_BASE_URL.'/exp-realty-image-1.png',
