@@ -7,3 +7,6 @@
 
 # Fix NGINX server from stripping Authorization header
 SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
+
+# Disable directory indexing
+Options -Indexes
