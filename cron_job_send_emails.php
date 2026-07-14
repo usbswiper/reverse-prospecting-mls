@@ -158,7 +158,7 @@ Webmaster Admin<br>
             $emailData['custom_email_notes_1'] = $result['email_notes_1'] ?? '';
             if (!empty($result['custom_mls_number'])) {
                 $emailData['mls'] = $result['custom_mls_number'] ?? '';
-                $emailData['emailSubject'] = preg_replace('/MLS No:\s*\w+/', 'MLS No: ' . $emailData['mls'], $emailData['emailSubject']);
+                $emailData['emailSubject'] = EmailSubject::replaceMlsNumber($emailData['emailSubject'], $emailData['mls']);
             }
             $emailData['custom_website_link'] = $result['website_link'] ?? '';
             if (!empty($emailData['custom_website_link'])) {
@@ -185,9 +185,12 @@ Webmaster Admin<br>
                     }
                 }
                 if (count($addrWithRecpName)) {
+                    // Compose and validate once; a corrupted stored subject throws
+                    // here and is recorded as a failed row rather than being sent.
+                    $subject = EmailSubject::compose($emailData['custom_subject_prefix'], $emailData['emailSubject']);
                     foreach ($addrWithRecpName as $addr => $name) {
                         $emailData['unsubscribeLink'] = $unsub->getUnsubscribeLink($addr);
-                        $this->sendEmail([$addr => $name], $emailData['custom_subject_prefix'].$emailData['emailSubject'], getEmailBody($emailData));
+                        $this->sendEmail([$addr => $name], $subject, getEmailBody($emailData));
                         $emailSent = true;
                     }
                 } else {

@@ -2191,7 +2191,11 @@ class wpdb {
          *
          * @param string $query Database query.
          */
-        $query = apply_filters( 'query', $query );
+        // This is a standalone copy of wpdb with no WordPress filter runtime, so
+        // the 'query' filter that normally strips the placeholder escape never
+        // runs. Restore the literal % here so percent characters survive to MySQL
+        // instead of being persisted as the {hash} placeholder token.
+        $query = $this->remove_placeholder_escape( apply_filters( 'query', $query ) );
 
         if ( ! $query ) {
             $this->insert_id = 0;

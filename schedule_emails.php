@@ -45,6 +45,25 @@ class ScheduleEmails extends ApiBase {
             throw new Exception('emails validation failed.');
         }
 
+        // Reject an encoded, control-character, markup, or script-wrapper subject
+        // before it can be previewed, queued, or sent. This validates the subject
+        // exactly as it will be composed (custom MLS number + prefix).
+        $subjectPrefix = $this->requestData['subject_prefix'] ?? '';
+        $customMlsNumber = $this->requestData['custom_mls_number'] ?? '';
+        foreach ($this->requestData['emails'] as $singleEmail) {
+            if (!is_array($singleEmail)) {
+                throw new Exception('emails validation failed.');
+            }
+            if (empty($singleEmail['emailSubject'])) {
+                continue;
+            }
+            $subject = $singleEmail['emailSubject'];
+            if (!empty($customMlsNumber)) {
+                $subject = EmailSubject::replaceMlsNumber($subject, $customMlsNumber);
+            }
+            EmailSubject::compose($subjectPrefix, $subject);
+        }
+
         if (empty($_FILES['image']['name'])) {
             throw new Exception('please upload the image file.');
         }
@@ -90,7 +109,7 @@ class ScheduleEmails extends ApiBase {
         $emailData['custom_email_notes_1'] = $this->requestData['email_notes_1'] ?? '';
         if (!empty($this->requestData['custom_mls_number'])) {
             $emailData['mls'] = $this->requestData['custom_mls_number'] ?? '';
-            $emailData['emailSubject'] = preg_replace('/MLS No:\s*\w+/', 'MLS No: ' . $emailData['mls'], $emailData['emailSubject']);
+            $emailData['emailSubject'] = EmailSubject::replaceMlsNumber($emailData['emailSubject'], $emailData['mls']);
         }
         $emailData['custom_website_link'] = $this->requestData['website_link'] ?? '';
         if (!empty($emailData['custom_website_link'])) {
@@ -104,7 +123,8 @@ class ScheduleEmails extends ApiBase {
         $emailData['custom_image_file'] = $targetFile;
         $emailData['unsubscribeLink'] = 'https://example.com';
         $htmlBody = getEmailBody($emailData);
-        $htmlBody = 'Subject: ' . $emailData['custom_subject_prefix'] . $emailData['emailSubject'] . '<br><br>' . $htmlBody;
+        $previewSubject = EmailSubject::compose($emailData['custom_subject_prefix'], $emailData['emailSubject']);
+        $htmlBody = 'Subject: ' . EmailSubject::escapeForHtml($previewSubject) . '<br><br>' . $htmlBody;
         return ['message' => 'Email preview prepared successfully.', 'html' => $htmlBody];
     }
 
